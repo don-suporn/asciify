@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 #define STB_IMAGE_IMPLEMENTATION
-#include "includes\stb_image.h"
+#include "includes/stb_image.h"
 
 int main(int argc, char *argv[]) {
     // Check for invalid usage
@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
     wchar_t darkGreySquare = L'\u2591';
 
     // Cacluclate scaling for ascii art
-    int rowIncrement = round(height / asciiHeight);
-    int columnIncrement = round((rowIncrement *3 ) / 5);
+    int rowIncrement = height / asciiHeight;
+    int columnIncrement = rowIncrement / 2;
 
     // Print!!!
     for (int row = 0; row < height; row += rowIncrement) {
@@ -58,16 +58,20 @@ int main(int argc, char *argv[]) {
             unsigned char blue = data[pixelIndex + 1];
             int average = round((red + green + blue) / 3);
             if (average > 180) {
-                wprintf(L"%lc", whiteSquare);
+                //wprintf(L"%lc", whiteSquare);
+                printf("\u2588");
             }
             else if (average > 110) {
-                wprintf(L"%lc", lightGreySquare);
+                //wprintf(L"%lc", lightGreySquare);
+                printf("\u2593");
             }
             else if (average > 80) {
-                wprintf(L"%lc", greySquare);
+                //wprintf(L"%lc", greySquare);
+                printf("\u2592");
             }
             else if (average > 50) {
-                wprintf(L"%lc", darkGreySquare);
+                //wprintf(L"%lc", darkGreySquare);
+                printf("\u2591");
             }
             else {
                 printf(" ");
