@@ -1,42 +1,63 @@
 // TODOs
-// - getopt usage
+// - figure out light mode
 
 // Include libraries
 #include <locale.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <getopt.h>
 #include <wchar.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "includes/stb_image.h"
 
 int main(int argc, char *argv[]) {
+    // Handle options
+    int opt;
+    char* imagePath = "";
+    int asciiHeight = 30;
+    int lightModeFlag = 0;
 
-    // Check for invalid usage
-
-    if (argc != 3) {
-        printf("Invalid number of arguments | usage : asciify <imagepath> <height>");
-        return 1;
+    opterr = 0;
+    while ((opt = getopt(argc, argv, "h:l")) != -1) {
+        switch (opt)
+        {
+            case 'h':
+                asciiHeight = atoi(optarg);
+                if (asciiHeight < 0) {
+                    printf("Height must be a positive integer\n");
+                    return 1;
+                }
+                break;
+            case 'l':
+                lightModeFlag = 1;
+            case '?':
+                printf("Unknown option -%c\n", optopt);
+                return 1;
+            default:
+                printf("Error handling options\n");
+                return 1;
+        }
     }
 
-    // Check for valid height
-
-    int asciiHeight = atoi(argv[2]);
-    if (asciiHeight == 0) {
-        printf("<height> provided must be a valid integer | usage : asciify <imagepath> <height>");
-        return 2;
+    if (optind == argc) {
+        printf("Basic usage: asciify <path to image>\n");
+        return 1;
+    }
+    else {
+        imagePath = argv[optind];
     }
 
     // Load image data
 
     int width, height, comps, channelCount;
     channelCount = 3;
-    unsigned char *data = stbi_load(argv[1], &width, &height, &comps, channelCount);
+    unsigned char *data = stbi_load(imagePath, &width, &height, &comps, channelCount);
 
     // Check for failure to load image
 
     if (data == NULL) {
-        printf("Failure to load image data");
+        printf("Failure to load image data\n");
         return 2;
     }
 
@@ -48,7 +69,7 @@ int main(int argc, char *argv[]) {
     int asciiWidth = width / columnIncrement;
     int asciiArray[asciiHeight][asciiWidth];
 
-    // 
+    // Initialise variables for dynamic shading
      
     int shadeLowerBound = 300;
     int shadeUpperBound = 0;
@@ -81,7 +102,7 @@ int main(int argc, char *argv[]) {
     // Determine shade range
     int shadeRange = shadeUpperBound - shadeLowerBound;
 
-    // Setting up ascii art support
+    // Setting up ascii art
     setlocale(LC_ALL, "en_US.UTF-8");
 
     // Print!!
@@ -89,16 +110,16 @@ int main(int argc, char *argv[]) {
         for (int asciiColumn = 0; asciiColumn < asciiWidth; asciiColumn += 1) {
             int currentBlock = asciiArray[asciiRow][asciiColumn];
             if (currentBlock >= shadeUpperBound - shadeRange / 4) {
-                printf("\u2588");
+                printf("█");
             }
             else if (currentBlock >= shadeUpperBound - shadeRange / 2) {
-                printf("\u2593");
+                printf("▓");
             }
             else if (currentBlock >= shadeUpperBound - shadeRange * 7 / 10) {
-                printf("\u2592");
+                printf("▒");
             }
             else if (currentBlock >= 50) {
-                printf("\u2591");
+                printf("░");
             }
             else {
                 printf(" ");
