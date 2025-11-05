@@ -48,6 +48,8 @@ int main(int argc, char *argv[]) {
     int asciiWidth = width / columnIncrement;
     int asciiArray[asciiHeight][asciiWidth];
 
+    // 
+     
     int shadeLowerBound = 300;
     int shadeUpperBound = 0;
 
@@ -78,7 +80,6 @@ int main(int argc, char *argv[]) {
 
     // Determine shade range
     int shadeRange = shadeUpperBound - shadeLowerBound;
-    printf("%i %i %i", shadeLowerBound, shadeUpperBound, shadeRange);
 
     // Setting up ascii art support
     setlocale(LC_ALL, "en_US.UTF-8");
