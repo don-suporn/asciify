@@ -1,5 +1,5 @@
 // TODOs
-// - figure out light mode
+// - 
 
 // Include libraries
 #include <locale.h>
@@ -100,7 +100,12 @@ int main(int argc, char *argv[]) {
     int shadeRange = shadeUpperBound - shadeLowerBound;
 
     // Setting up ascii art
-    setlocale(LC_ALL, "en_US.UTF-8");
+    setlocale(LC_ALL, "en.US");
+
+    // █
+    // ▓
+    // ▒
+    // ░
 
     // Print!!
     for (int asciiRow = 0; asciiRow < asciiHeight; asciiRow += 1) {
@@ -115,7 +120,7 @@ int main(int argc, char *argv[]) {
             else if (currentBlock >= shadeUpperBound - shadeRange * 7 / 10) {
                 printf("▒");
             }
-            else if (currentBlock >= 50) {
+            else if (currentBlock >= shadeUpperBound - shadeRange * 4 / 5) {
                 printf("░");
             }
             else {
