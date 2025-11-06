@@ -16,22 +16,17 @@ int main(int argc, char *argv[]) {
     int opt;
     char* imagePath = "";
     int asciiHeight = 30;
-    int invertFlag = 0;
 
     opterr = 0;
-    while ((opt = getopt(argc, argv, "h:i")) != -1) {
+    while ((opt = getopt(argc, argv, "h:")) != -1) {
         switch (opt)
         {
             case 'h':
                 asciiHeight = atoi(optarg);
-                if (asciiHeight < 0) {
+                if (asciiHeight <= 0) {
                     printf("Height must be a positive integer\n");
                     return 1;
                 }
-                break;
-            case 'i':
-                printf("Light mode enabled");
-                invertFlag = 1;
                 break;
             case '?':
                 printf("Unknown option -%c\n", optopt);
@@ -108,51 +103,26 @@ int main(int argc, char *argv[]) {
     setlocale(LC_ALL, "en_US.UTF-8");
 
     // Print!!
-    if (invertFlag) {
-        for (int asciiRow = 0; asciiRow < asciiHeight; asciiRow += 1) {
-            for (int asciiColumn = 0; asciiColumn < asciiWidth; asciiColumn += 1) {
-                int currentBlock = asciiArray[asciiRow][asciiColumn];
-                if (currentBlock >= shadeUpperBound - shadeRange / 4) {
-                    printf(" ");
-                }
-                else if (currentBlock >= shadeUpperBound - shadeRange / 2) {
-                    printf("\033[31m░\033[0m");
-                }
-                else if (currentBlock >= shadeUpperBound - shadeRange * 7 / 10) {
-                    printf("\033[31m▒\033[0m");
-                }
-                else if (currentBlock >= 50) {
-                    printf("\033[31m▓\033[0m");
-                }
-                else {
-                    printf("\033[31m█\033[0m");    
-                }
+    for (int asciiRow = 0; asciiRow < asciiHeight; asciiRow += 1) {
+        for (int asciiColumn = 0; asciiColumn < asciiWidth; asciiColumn += 1) {
+            int currentBlock = asciiArray[asciiRow][asciiColumn];
+            if (currentBlock >= shadeUpperBound - shadeRange / 4) {
+                printf("█");
             }
-        printf("\n");
-        } 
-    }
-    else {
-        for (int asciiRow = 0; asciiRow < asciiHeight; asciiRow += 1) {
-            for (int asciiColumn = 0; asciiColumn < asciiWidth; asciiColumn += 1) {
-                int currentBlock = asciiArray[asciiRow][asciiColumn];
-                if (currentBlock >= shadeUpperBound - shadeRange / 4) {
-                    printf("█");
-                }
-                else if (currentBlock >= shadeUpperBound - shadeRange / 2) {
-                    printf("▓");
-                }
-                else if (currentBlock >= shadeUpperBound - shadeRange * 7 / 10) {
-                    printf("▒");
-                }
-                else if (currentBlock >= 50) {
-                    printf("░");
-                }
-                else {
-                    printf(" ");    
-                }
+            else if (currentBlock >= shadeUpperBound - shadeRange / 2) {
+                printf("▓");
             }
-            printf("\n");
+            else if (currentBlock >= shadeUpperBound - shadeRange * 7 / 10) {
+                printf("▒");
+            }
+            else if (currentBlock >= 50) {
+                printf("░");
+            }
+            else {
+                printf(" ");    
+            }
         }
+        printf("\n");
     }
     
     // Free image data
